@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brick Breaker Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #222;
+            color: white;
+        }
+
+        .game-container {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            background: #333;
+            overflow: hidden;
+            border: 2px solid #fff;
+            border-radius: 10px;
+        }
+
+        .paddle {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            width: 100px;
+            height: 10px;
+            background: #00ffcc;
+            transform: translateX(-50%);
+        }
+
+        .ball {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #ffcc00;
+            border-radius: 50%;
+        }
+
+        .brick {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background: #ff5722;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <a href="http://127.0.0.1:3000/website with games/my_games_main">home</a>
+    <div class="game-container" id="gameContainer">
+        <div class="paddle" id="paddle"></div>
+        <div class="ball" id="ball"></div>
+    </div>
+    <script>
+        const gameContainer = document.getElementById('gameContainer');
+        const paddle = document.getElementById('paddle');
+        const ball = document.getElementById('ball');
+
+        // Game dimensions
+        const gameWidth = gameContainer.clientWidth;
+        const gameHeight = gameContainer.clientHeight;
+
+        // Paddle movement variables
+        let paddleX = gameWidth / 2 - 50;
+        const paddleSpeed = 5;
+        let movingLeft = false;
+        let movingRight = false;
+
+        // Ball movement
+        let ballX = gameWidth / 2 - 7.5;
+        let ballY = gameHeight / 2;
+        let ballSpeedX = 3;
+        let ballSpeedY = -3;
+
+        // Bricks
+        const rows = 3;
+        const cols = 8;
+        const bricks = [];
+        const brickWidth = 60;
+        const brickHeight = 20;
+
+        function createBricks() {
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const brick = document.createElement('div');
+                    brick.classList.add('brick');
+                    brick.style.left = `${col * (brickWidth + 10) + 15}px`;
+                    brick.style.top = `${row * (brickHeight + 10) + 15}px`;
+                    gameContainer.appendChild(brick);
+                    bricks.push(brick);
+                }
+            }
+        }
+
+        createBricks();
+
+        // Paddle controls with smooth movement
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') movingLeft = true;
+            if (e.key === 'ArrowRight') movingRight = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft') movingLeft = false;
+            if (e.key === 'ArrowRight') movingRight = false;
+        });
+
+        function movePaddle() {
+            if (movingLeft && paddleX > 0) {
+                paddleX -= paddleSpeed;
+            }
+
+            if (movingRight && paddleX < gameWidth - paddle.offsetWidth) {
+                paddleX += paddleSpeed;
+            }
+
+            paddle.style.left = `${paddleX}px`;
+        }
+
+        // Ball movement and collision detection
+        function moveBall() {
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            // Wall collision
+            if (ballX <= 0 || ballX >= gameWidth - ball.offsetWidth) {
+                ballSpeedX *= -1;
+            }
+            if (ballY <= 0) {
+                ballSpeedY *= -1;
+            }
+
+            // Paddle collision
+            if (
+                ballY + ball.offsetHeight >= paddle.offsetTop &&
+                ballX + ball.offsetWidth >= paddleX &&
+                ballX <= paddleX + paddle.offsetWidth
+            ) {
+                ballSpeedY *= -1;
+            }
+
+            // Brick collision
+            bricks.forEach((brick, index) => {
+                const brickRect = brick.getBoundingClientRect();
+                const ballRect = ball.getBoundingClientRect();
+
+                if (
+                    ballRect.left < brickRect.right &&
+                    ballRect.right > brickRect.left &&
+                    ballRect.top < brickRect.bottom &&
+                    ballRect.bottom > brickRect.top
+                ) {
+                    ballSpeedY *= -1;
+                    brick.remove();
+                    bricks.splice(index, 1);
+                }
+            });
+
+            // Game over
+            if (ballY >= gameHeight) {
+                alert('Game Over! Try Again!');
+                resetGame();
+            }
+
+            // Win condition
+            if (bricks.length === 0) {
+                alert('You Win!');
+                resetGame();
+            }
+
+            ball.style.left = `${ballX}px`;
+            ball.style.top = `${ballY}px`;
+        }
+
+        function resetGame() {
+            ballX = gameWidth / 2 - 7.5;
+            ballY = gameHeight / 2;
+            ballSpeedX = 3;
+            ballSpeedY = -3;
+            bricks.forEach(brick => brick.remove());
+            bricks.length = 0;
+            createBricks();
+        }
+
+        // Game loop
+        function gameLoop() {
+            movePaddle();
+            moveBall();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>

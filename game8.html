@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #8ec5fc, #e0c3fc); /* Gradient background */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #4CAF50;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        #result, #player-choice, #computer-choice {
+            margin-top: 20px;
+            font-size: 1.4rem;
+            white-space: pre-wrap; /* Preserves ASCII art formatting */
+        }
+    </style>
+</head>
+<body>
+    <a href="http://127.0.0.1:3000/website with games/my_games_main">home</a>
+    <h1>Rock Paper Scissors</h1>
+    <p>Make your choice:</p>
+    <button onclick="playGame('rock')">Rock</button>
+    <button onclick="playGame('paper')">Paper</button>
+    <button onclick="playGame('scissors')">Scissors</button>
+
+    <div id="result"></div>
+    <div id="player-choice"></div>
+    <div id="computer-choice"></div>
+
+    <script>
+        const asciiArt = {
+            rock: `
+    _______
+---'   ____)
+      (_____)
+      (_____)
+      (____)
+---.__(___)
+            `,
+            paper: `
+     _______
+---'    ____)____
+           ______)
+          _______)
+         _______)
+---.__________)
+            `,
+            scissors: `
+    _______
+---'   ____)____
+          ______)
+       __________)
+      (____)
+---.__(___)
+            `
+        };
+
+        function playGame(playerChoice) {
+            const choices = ["rock", "paper", "scissors"];
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+
+            let result;
+            if (playerChoice === computerChoice) {
+                result = "It's a tie!";
+            } else if (
+                (playerChoice === "rock" && computerChoice === "scissors") ||
+                (playerChoice === "paper" && computerChoice === "rock") ||
+                (playerChoice === "scissors" && computerChoice === "paper")
+            ) {
+                result = "You win!";
+            } else {
+                result = "You lose!";
+            }
+
+            // Update the result and display choices as ASCII art
+            document.getElementById("result").textContent = result;
+            document.getElementById("player-choice").innerHTML = 
+                `Your choice:\n${asciiArt[playerChoice]}`;
+            document.getElementById("computer-choice").innerHTML = 
+                `Computer's choice:\n${asciiArt[computerChoice]}`;
+        }
+    </script>
+</body>
+</html>

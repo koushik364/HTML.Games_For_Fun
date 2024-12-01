@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Clicker</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            font-size: 24px;
+            cursor: pointer;
+            margin: 20px;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .upgrades {
+            margin-top: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .upgrade {
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .upgrade-button {
+            background-color: #ff9800;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .upgrade-button:hover {
+            background-color: #e68900;
+        }
+
+        .cookie-count {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .cookie-per-second {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        #cookieIcon {
+            width: 60px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <a href="http://127.0.0.1:3000/website with games/my_games_main">home</a>
+    <h1>Cookie Clicker Game</h1>
+    <div>
+        <button class="button" id="cookieButton">
+            <img src="https://img.icons8.com/ios/50/000000/cookie.png" id="cookieIcon" alt="Cookie"> Click me!
+        </button>
+    </div>
+    <div>
+        <div class="cookie-count" id="cookieCount">Cookies: 0</div>
+        <div class="cookie-per-second" id="cookiesPerSecond">Cookies per second: 0</div>
+    </div>
+
+    <div class="upgrades">
+        <div class="upgrade">
+            <span>Upgrade 1: Increase click value by 1 cookie</span>
+            <button class="upgrade-button" id="upgrade1">Buy for 10 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 2: Increase click value by 5 cookies</span>
+            <button class="upgrade-button" id="upgrade2">Buy for 50 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 3: Get 1 cookie per second</span>
+            <button class="upgrade-button" id="upgrade3">Buy for 100 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 4: Get 5 cookies per second</span>
+            <button class="upgrade-button" id="upgrade4">Buy for 500 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 5: Increase click value by 10 cookies</span>
+            <button class="upgrade-button" id="upgrade5">Buy for 1000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 6: Get 10 cookies per second</span>
+            <button class="upgrade-button" id="upgrade6">Buy for 2000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 7: Increase click value by 20 cookies</span>
+            <button class="upgrade-button" id="upgrade7">Buy for 5000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 8: Get 25 cookies per second</span>
+            <button class="upgrade-button" id="upgrade8">Buy for 10000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 9: Increase click value by 50 cookies</span>
+            <button class="upgrade-button" id="upgrade9">Buy for 25000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 10: Get 50 cookies per second</span>
+            <button class="upgrade-button" id="upgrade10">Buy for 50000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 11: Increase click value by 100 cookies</span>
+            <button class="upgrade-button" id="upgrade11">Buy for 100000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 12: Get 100 cookies per second</span>
+            <button class="upgrade-button" id="upgrade12">Buy for 200000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 13: Increase click value by 500 cookies</span>
+            <button class="upgrade-button" id="upgrade13">Buy for 500000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 14: Get 500 cookies per second</span>
+            <button class="upgrade-button" id="upgrade14">Buy for 1000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 15: Increase click value by 200 cookies</span>
+            <button class="upgrade-button" id="upgrade15">Buy for 2500000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 16: Get 1000 cookies per second</span>
+            <button class="upgrade-button" id="upgrade16">Buy for 5000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 17: Increase click value by 1000 cookies</span>
+            <button class="upgrade-button" id="upgrade17">Buy for 10000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 18: Get 1500 cookies per second</span>
+            <button class="upgrade-button" id="upgrade18">Buy for 20000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 19: Increase click value by 2000 cookies</span>
+            <button class="upgrade-button" id="upgrade19">Buy for 50000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 20: Get 3000 cookies per second</span>
+            <button class="upgrade-button" id="upgrade20">Buy for 100000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 21: Increase click value by 5000 cookies</span>
+            <button class="upgrade-button" id="upgrade21">Buy for 250000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 22: Get 5000 cookies per second</span>
+            <button class="upgrade-button" id="upgrade22">Buy for 500000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 23: Increase click value by 10000 cookies</span>
+            <button class="upgrade-button" id="upgrade23">Buy for 1000000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 24: Get 10000 cookies per second</span>
+            <button class="upgrade-button" id="upgrade24">Buy for 2000000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 25: Increase click value by 20000 cookies</span>
+            <button class="upgrade-button" id="upgrade25">Buy for 5000000000 cookies</button>
+        </div>
+        <div class="upgrade">
+            <span>Upgrade 26: Get 20000 cookies per second</span>
+            <button class="upgrade-button" id="upgrade26">Buy for 10000000000 cookies</button>
+        </div>
+    </div>
+
+    <script>
+        let cookieCount = 0;
+        let cookiesPerSecond = 0;
+        let clickValue = 1;
+        let autoCookies = 0;
+
+        // Update cookie count display
+        function updateCookieDisplay() {
+            document.getElementById('cookieCount').textContent = `Cookies: ${cookieCount}`;
+            document.getElementById('cookiesPerSecond').textContent = `Cookies per second: ${cookiesPerSecond}`;
+        }
+
+        // Handle clicking the cookie
+        document.getElementById('cookieButton').onclick = function() {
+            cookieCount += clickValue;
+            updateCookieDisplay();
+        };
+
+        // Handle buying upgrades
+        document.getElementById('upgrade1').onclick = function() {
+            if (cookieCount >= 10) {
+                cookieCount -= 10;
+                clickValue += 1;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade2').onclick = function() {
+            if (cookieCount >= 50) {
+                cookieCount -= 50;
+                clickValue += 5;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade3').onclick = function() {
+            if (cookieCount >= 100) {
+                cookieCount -= 100;
+                cookiesPerSecond += 1;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade4').onclick = function() {
+            if (cookieCount >= 500) {
+                cookieCount -= 500;
+                cookiesPerSecond += 5;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade5').onclick = function() {
+            if (cookieCount >= 1000) {
+                cookieCount -= 1000;
+                clickValue += 10;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade6').onclick = function() {
+            if (cookieCount >= 2000) {
+                cookieCount -= 2000;
+                cookiesPerSecond += 10;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade7').onclick = function() {
+            if (cookieCount >= 5000) {
+                cookieCount -= 5000;
+                clickValue += 20;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade8').onclick = function() {
+            if (cookieCount >= 10000) {
+                cookieCount -= 10000;
+                cookiesPerSecond += 25;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade9').onclick = function() {
+            if (cookieCount >= 25000) {
+                cookieCount -= 25000;
+                clickValue += 50;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade10').onclick = function() {
+            if (cookieCount >= 50000) {
+                cookieCount -= 50000;
+                cookiesPerSecond += 50;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade11').onclick = function() {
+            if (cookieCount >= 100000) {
+                cookieCount -= 100000;
+                clickValue += 100;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade12').onclick = function() {
+            if (cookieCount >= 200000) {
+                cookieCount -= 200000;
+                cookiesPerSecond += 100;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade13').onclick = function() {
+            if (cookieCount >= 500000) {
+                cookieCount -= 500000;
+                clickValue += 500;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade14').onclick = function() {
+            if (cookieCount >= 1000000) {
+                cookieCount -= 1000000;
+                cookiesPerSecond += 500;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade15').onclick = function() {
+            if (cookieCount >= 2500000) {
+                cookieCount -= 2500000;
+                clickValue += 2000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade16').onclick = function() {
+            if (cookieCount >= 5000000) {
+                cookieCount -= 5000000;
+                cookiesPerSecond += 1000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade17').onclick = function() {
+            if (cookieCount >= 10000000) {
+                cookieCount -= 10000000;
+                clickValue += 1000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade18').onclick = function() {
+            if (cookieCount >= 20000000) {
+                cookieCount -= 20000000;
+                cookiesPerSecond += 1500;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade19').onclick = function() {
+            if (cookieCount >= 50000000) {
+                cookieCount -= 50000000;
+                clickValue += 2000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade20').onclick = function() {
+            if (cookieCount >= 100000000) {
+                cookieCount -= 100000000;
+                cookiesPerSecond += 3000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade21').onclick = function() {
+            if (cookieCount >= 250000000) {
+                cookieCount -= 250000000;
+                clickValue += 5000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade22').onclick = function() {
+            if (cookieCount >= 500000000) {
+                cookieCount -= 500000000;
+                cookiesPerSecond += 5000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade23').onclick = function() {
+            if (cookieCount >= 1000000000) {
+                cookieCount -= 1000000000;
+                clickValue += 10000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade24').onclick = function() {
+            if (cookieCount >= 2000000000) {
+                cookieCount -= 2000000000;
+                cookiesPerSecond += 10000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade25').onclick = function() {
+            if (cookieCount >= 5000000000) {
+                cookieCount -= 5000000000;
+                clickValue += 20000;
+                updateCookieDisplay();
+            }
+        };
+
+        document.getElementById('upgrade26').onclick = function() {
+            if (cookieCount >= 10000000000) {
+                cookieCount -= 10000000000;
+                cookiesPerSecond += 20000;
+                updateCookieDisplay();
+            }
+        };
+
+        // Automatically generate cookies every second
+        setInterval(function() {
+            cookieCount += cookiesPerSecond;
+            updateCookieDisplay();
+        }, 1000);
+    </script>
+</body>
+</html>
