@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>games for fun</title>
+    <style>
+        /* Reset and global styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+
+        /* Header */
+        header {
+            background-color: #ff5e57;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-family: 'Verdana', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Game Sections */
+        section {
+            margin-top: 40px;
+            text-align: center;
+            color: #fff;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .game {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: linear-gradient(135deg, #ff7a18, #af002d);
+        }
+
+        .game:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .game img {
+            width: 100%;
+            border-radius: 8px;
+            height: 150px;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .game img:hover {
+            opacity: 0.8;
+        }
+
+        .game h4 {
+            font-size: 1.4rem;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .game a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .game a:hover {
+            background-color: #ffcc00;
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design Adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            section h2 {
+                font-size: 2rem;
+            }
+
+            .game img {
+                height: 120px;
+            }
+
+            .game h4 {
+                font-size: 1.2rem;
+            }
+
+            .game a {
+                font-size: 0.9rem;
+                padding: 10px 15px;
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>My Game Website</h1>
+    </header>
+
+    <!-- Computer Games Section -->
+    <section id="computer-games">
+        <h2>Computer Games</h2>
+        <div class="game-list">
+            <!-- 9 Computer Game Boxes -->
+            <div class="game">
+                <img src="car.png" alt="Game 1 Thumbnail">
+                <h4>dodge the cars pc</h4>
+                <a href="game1.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="shooter.png" alt="Game 2 Thumbnail">
+                <h4>boxy shooter pc</h4>
+                <a href="game2.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="cookie_clicker.png" alt="Game 3 Thumbnail">
+                <h4>cookie clicker pc</h4>
+                <a href="game3.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="catch_ball.png" alt="Game 4 Thumbnail">
+                <h4>catch the ball pc</h4>
+                <a href="game4.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="click.png" alt="Game 5 Thumbnail">
+                <h4>click the moving box pc</h4>
+                <a href="game5.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="break.png" alt="Game 6 Thumbnail">
+                <h4>brick Breaker pc</h4>
+                <a href="game6.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="number.png" alt="Game 7 Thumbnail">
+                <h4>guess the number pc</h4>
+                <a href="game7.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="rock.png" alt="Game 8 Thumbnail">
+                <h4>rock paper scissors pc</h4>
+                <a href="game8.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="klic.png" alt="Game 9 Thumbnail">
+                <h4>click the falling box pc</h4>
+                <a href="game9.html">Play Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile Games Section -->
+    <section id="mobile-games">
+        <h2>Mobile Games</h2>
+        <div class="game-list">
+            <!-- 9 Mobile Game Boxes -->
+            <div class="game">
+                <img src="click.png" alt="Mobile Game 1 Thumbnail">
+                <h4>click the moving box mb</h4>
+                <a href="mobile1.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="break.png" alt="Mobile Game 2 Thumbnail">
+                <h4>brick breaker mb</h4>
+                <a href="mobile2.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="number.png" alt="Mobile Game 3 Thumbnail">
+                <h4>guess the number mb</h4>
+                <a href="mobile3.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="memory.png" alt="Mobile Game 4 Thumbnail">
+                <h4>memory match mb</h4>
+                <a href="mobile4.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="klic.png" alt="Mobile Game 5 Thumbnail">
+                <h4>click the falling box mb</h4>
+                <a href="mobile5.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="tic.png" alt="Mobile Game 6 Thumbnail">
+                <h4>tic tac toe mb</h4>
+                <a href="mobile6.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="mole.png" alt="Mobile Game 7 Thumbnail">
+                <h4>whack a mole mb</h4>
+                <a href="mobile7.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="platformer.png" alt="Mobile Game 8 Thumbnail">
+                <h4>platformer game mb</h4>
+                <a href="mobile8.html">Play Now</a>
+            </div>
+            <div class="game">
+                <img src="cookie_clicker.png" alt="Mobile Game 9 Thumbnail">
+                <h4>cookie clicker mb</h4>
+                <a href="mobile9.html">Play Now</a>
+            </div>
+<h2>have fun!</h2>
+<h6>made by koushik</h6>            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
