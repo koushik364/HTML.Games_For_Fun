@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click the Falling Box Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #game-area {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 600px;
+            background-color: #ffffff;
+            border: 2px solid #3b8686;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .falling-box {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #ff6f61;
+            border-radius: 5px;
+        }
+
+        #score-board {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        #lives {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        #restart-button {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #3b8686;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #restart-button:hover {
+            background-color: #ff6f61;
+        }
+    </style>
+</head>
+<body>
+    <a href="http://127.0.0.1:3000/website with games/my_games_main">home</a>
+    <div id="game-area">
+        <div id="score-board">Score: 0</div>
+        <div id="lives">Lives: 5</div>
+        <button id="restart-button">Restart</button>
+    </div>
+
+    <script>
+        const gameArea = document.getElementById("game-area");
+        const scoreBoard = document.getElementById("score-board");
+        const livesDisplay = document.getElementById("lives");
+        const restartButton = document.getElementById("restart-button");
+
+        let score = 0;
+        let lives = 5;
+        let spawnInterval = 1500; // Start spawn interval at 1500ms
+        let boxSpeed = 2; // Speed of falling boxes
+        let gameInterval;
+
+        // Function to start the game
+        function startGame() {
+            score = 0;
+            lives = 5;
+            spawnInterval = 1500; // Reset spawn interval
+            scoreBoard.textContent = `Score: ${score}`;
+            livesDisplay.textContent = `Lives: ${lives}`;
+            restartButton.style.display = "none";
+
+            // Start spawning boxes
+            gameInterval = setInterval(spawnBox, spawnInterval);
+        }
+
+        // Function to spawn a falling box
+        function spawnBox() {
+            const box = document.createElement("div");
+            box.className = "falling-box";
+            box.style.left = Math.random() * (gameArea.clientWidth - 50) + "px";
+            gameArea.appendChild(box);
+
+            let boxPosition = 0;
+
+            // Make the box fall faster as the game progresses
+            const boxFallInterval = setInterval(() => {
+                boxPosition += boxSpeed;
+                box.style.top = boxPosition + "px";
+
+                // Check if the box goes out of bounds
+                if (boxPosition > gameArea.clientHeight) {
+                    clearInterval(boxFallInterval);
+                    gameArea.removeChild(box);
+                    loseLife();
+                }
+            }, 20);
+
+            // Add click event to catch the box
+            box.addEventListener("click", () => {
+                clearInterval(boxFallInterval);
+                gameArea.removeChild(box);
+                increaseScore();
+            });
+        }
+
+        // Function to increase score and adjust difficulty
+        function increaseScore() {
+            score++;
+            scoreBoard.textContent = `Score: ${score}`;
+
+            // Speed up spawn rate every 5 points
+            if (score % 5 === 0 && spawnInterval > 500) {
+                spawnInterval -= 200;
+                clearInterval(gameInterval);
+                gameInterval = setInterval(spawnBox, spawnInterval);
+            }
+
+            // Increase box speed every 10 points for a faster fall
+            if (score % 10 === 0 && boxSpeed < 10) {
+                boxSpeed += 1;
+            }
+        }
+
+        // Function to handle losing a life
+        function loseLife() {
+            lives--;
+            livesDisplay.textContent = `Lives: ${lives}`;
+            if (lives <= 0) {
+                endGame();
+            }
+        }
+
+        // Function to end the game
+        function endGame() {
+            clearInterval(gameInterval);
+            restartButton.style.display = "block";
+        }
+
+        // Restart game on button click
+        restartButton.addEventListener("click", startGame);
+
+        // Initialize the game
+        startGame();
+    </script>
+</body>
+</html>

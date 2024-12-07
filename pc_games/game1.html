@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Racing Game with AI Opponents</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* The Track */
+        .track {
+            width: 600px;
+            height: 800px;
+            background-color: #333;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Lane marks (road lines) */
+        .lane {
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background-color: white;
+            animation: laneAnimation 2s infinite linear;
+        }
+
+        .lane:nth-child(odd) {
+            top: 100px;
+        }
+
+        .lane:nth-child(even) {
+            top: 200px;
+        }
+
+        /* The player car styling */
+        .car {
+            position: absolute;
+            width: 50px;
+            height: 100px;
+            background-color: red;
+            border-radius: 10px;
+        }
+
+        /* AI car styling */
+        .ai-car {
+            position: absolute;
+            width: 50px;
+            height: 100px;
+            background-color: blue;
+            border-radius: 10px;
+        }
+
+        /* Score Display */
+        .score {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            z-index: 1000;  /* Ensure it's on top of everything else */
+            font-weight: bold;
+        }
+
+        /* Lane animation (moving road lines) */
+        @keyframes laneAnimation {
+            0% {
+                top: 100px;
+            }
+            100% {
+                top: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="http://127.0.0.1:3000/website with games/my_games_main">home</a>
+
+<div class="track">
+    <div class="lane"></div>
+    <div class="lane"></div>
+    <div class="lane"></div>
+    <div class="lane"></div>
+
+    <div class="car" id="car"></div>
+
+    <!-- AI cars -->
+    <div class="ai-car" id="ai-car-1"></div>
+    <div class="ai-car" id="ai-car-2"></div>
+    <div class="ai-car" id="ai-car-3"></div>
+
+    <!-- Score Display -->
+    <div class="score" id="score">Score: 0</div>
+</div>
+
+<script>
+    const car = document.getElementById('car');
+    const aiCars = [
+        document.getElementById('ai-car-1'),
+        document.getElementById('ai-car-2'),
+        document.getElementById('ai-car-3')
+    ];
+
+    const scoreDisplay = document.getElementById('score');
+
+    // Initial position of the player's car (higher on the screen)
+    let carX = 275; // X position of the car (centered)
+    let carY = 600; // Y position (higher up on the screen)
+    let carSpeed = 5; // Speed of the car
+
+    const trackWidth = 600; // Width of the track
+    const trackHeight = 800; // Height of the track
+
+    // AI car variables
+    const aiSpeeds = [3, 4, 2]; // Different speeds for each AI car
+    const aiPositions = [
+        { x: 100, y: 100, angle: 0 },
+        { x: 200, y: 200, angle: 0 },
+        { x: 300, y: 300, angle: 0 }
+    ];
+
+    // Track the keys
+    let keys = { left: false, right: false };
+
+    // Game variables
+    let score = 0; // Starting score
+
+    // Listen for keydown events
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') keys.left = true;
+        if (event.key === 'ArrowRight') keys.right = true;
+    });
+
+    // Listen for keyup events
+    document.addEventListener('keyup', (event) => {
+        if (event.key === 'ArrowLeft') keys.left = false;
+        if (event.key === 'ArrowRight') keys.right = false;
+    });
+
+    // Function to update the player's car movement (left and right only)
+    function updateCar() {
+        if (keys.left) {
+            carX -= carSpeed; // Move left
+        }
+
+        if (keys.right) {
+            carX += carSpeed; // Move right
+        }
+
+        // Boundary check: Keep the car inside the track horizontally
+        if (carX < 0) carX = 0;
+        if (carX > trackWidth - 50) carX = trackWidth - 50;
+
+        // Update the player's car position
+        car.style.transform = `translate(${carX}px, ${carY}px)`;
+    }
+
+    // Function to update AI cars' movement (moving vertically)
+    function updateAICars() {
+        aiCars.forEach((aiCar, index) => {
+            let ai = aiPositions[index];
+            ai.y += aiSpeeds[index];
+            if (ai.y > trackHeight) ai.y = -100; // Reset AI cars to the top when they reach the bottom
+
+            // Update AI car's position
+            aiCar.style.transform = `translate(${ai.x}px, ${ai.y}px)`;
+
+            // Check for collisions with the player car
+            checkCollision(ai, { x: carX, y: carY });
+        });
+    }
+
+    // Check for collisions between the player and AI cars
+    function checkCollision(ai, player) {
+        const aiRect = {
+            x: ai.x,
+            y: ai.y,
+            width: 50,
+            height: 100
+        };
+
+        const playerRect = {
+            x: player.x,
+            y: player.y,
+            width: 50,
+            height: 100
+        };
+
+        // Check for overlap between the two cars' bounding boxes
+        if (aiRect.x < playerRect.x + playerRect.width &&
+            aiRect.x + aiRect.width > playerRect.x &&
+            aiRect.y < playerRect.y + playerRect.height &&
+            aiRect.y + aiRect.height > playerRect.y) {
+            console.log('Collision Detected!');
+            resetCars();
+        }
+    }
+
+    // Reset the positions of the cars after a collision
+    function resetCars() {
+        carX = 275; // Reset player car to the center
+        aiPositions.forEach((ai) => {
+            ai.y = Math.random() * -100; // Reset AI cars to random positions above the screen
+        });
+        score = 0; // Reset score after collision
+    }
+
+    // Function to update score
+    function updateScore() {
+        score += 1; // Increase score over time (or based on progress)
+        scoreDisplay.textContent = `Score: ${score}`;
+    } 
+
+    // Game loop to update the car's position, AI movement, and score
+    function gameLoop() {
+        updateCar();
+        updateAICars();
+        updateScore(); // Update score over time
+        requestAnimationFrame(gameLoop); // Keep the game running
+    }
+
+    // Start the game loop
+    gameLoop();
+</script>
+
+</body>
+</html>

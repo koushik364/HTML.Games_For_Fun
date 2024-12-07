@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 40px);
+            grid-gap: 5px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            font-size: 1.5em;
+            border: 2px solid #ddd;
+            background-color: #fff;
+            text-transform: uppercase;
+        }
+        .cell.correct {
+            background-color: #6aaa64;
+            color: #fff;
+            border-color: #6aaa64;
+        }
+        .cell.present {
+            background-color: #c9b458;
+            color: #fff;
+            border-color: #c9b458;
+        }
+        .cell.absent {
+            background-color: #787c7e;
+            color: #fff;
+            border-color: #787c7e;
+        }
+        #message {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        #input {
+            margin: 10px 0;
+        }
+        #restart {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wordle Game</h1>
+    <div class="grid" id="grid">
+        <!-- Game grid will be dynamically generated -->
+    </div>
+    <div id="input">
+        <input type="text" id="guess" maxlength="5" placeholder="Enter 5-letter word">
+        <button id="submit">Submit</button>
+    </div>
+    <div id="message"></div>
+    <button id="restart">Restart</button> <!-- Restart button -->
+
+    <script>
+        let words = ["apple", "react", "coder", "debug", "scope"];
+        let answer = words[Math.floor(Math.random() * words.length)];
+        const maxGuesses = 6;
+        let currentRow = 0;
+        let isGameOver = false;
+
+        const grid = document.getElementById("grid");
+        const message = document.getElementById("message");
+        const guessInput = document.getElementById("guess");
+        const submitButton = document.getElementById("submit");
+        const restartButton = document.getElementById("restart");
+
+        // Create the grid
+        const createGrid = () => {
+            grid.innerHTML = ''; // Clear the grid before re-creating
+            for (let i = 0; i < maxGuesses; i++) {
+                for (let j = 0; j < 5; j++) {
+                    const cell = document.createElement("div");
+                    cell.className = "cell";
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    grid.appendChild(cell);
+                }
+            }
+        };
+
+        const checkGuess = (guess) => {
+            const answerArray = answer.split("");
+            const guessArray = guess.split("");
+
+            // Mark cells
+            guessArray.forEach((char, index) => {
+                const cell = document.querySelector(`.cell[data-row="${currentRow}"][data-col="${index}"]`);
+                if (char === answerArray[index]) {
+                    cell.classList.add("correct");
+                    answerArray[index] = null; // Mark as used
+                }
+            });
+
+            guessArray.forEach((char, index) => {
+                const cell = document.querySelector(`.cell[data-row="${currentRow}"][data-col="${index}"]`);
+                if (cell.classList.contains("correct")) return;
+
+                if (answerArray.includes(char)) {
+                    cell.classList.add("present");
+                    answerArray[answerArray.indexOf(char)] = null; // Mark as used
+                } else {
+                    cell.classList.add("absent");
+                }
+            });
+        };
+
+        const handleSubmit = () => {
+            if (isGameOver) return;
+
+            const guess = guessInput.value.toLowerCase();
+            if (guess.length !== 5) {
+                message.textContent = "Please enter a 5-letter word.";
+                return;
+            }
+
+            // Fill the current row with the guess
+            for (let i = 0; i < 5; i++) {
+                const cell = document.querySelector(`.cell[data-row="${currentRow}"][data-col="${i}"]`);
+                cell.textContent = guess[i];
+            }
+
+            checkGuess(guess);
+
+            if (guess === answer) {
+                message.textContent = "🎉 Congratulations! You guessed the word!";
+                isGameOver = true;
+                return;
+            }
+
+            currentRow++;
+
+            if (currentRow >= maxGuesses) {
+                message.textContent = `😢 You lose! The word was: ${answer}`;
+                isGameOver = true;
+                return;
+            }
+
+            guessInput.value = "";
+        };
+
+        const restartGame = () => {
+            answer = words[Math.floor(Math.random() * words.length)]; // Choose new random word
+            currentRow = 0;
+            isGameOver = false;
+            message.textContent = "";
+            guessInput.value = "";
+            createGrid(); // Re-create the grid
+        };
+
+        submitButton.addEventListener("click", handleSubmit);
+        guessInput.addEventListener("keyup", (e) => {
+            if (e.key === "Enter") handleSubmit();
+        });
+
+        restartButton.addEventListener("click", restartGame);
+
+        createGrid(); // Initial grid creation
+    </script>
+</body>
+</html>

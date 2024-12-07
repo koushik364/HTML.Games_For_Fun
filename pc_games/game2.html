@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved FPS</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #222;
+        }
+        canvas {
+            display: block;
+        }
+        #scoreboard {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <a href="http://127.0.0.1:3000/website with games/my_games_main">home</a>
+<canvas id="gameCanvas"></canvas>
+<div id="scoreboard">Score: 0</div>
+
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Game variables
+    let player = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        width: 50,
+        height: 50,
+        speed: 5,
+        dx: 0,
+        dy: 0,
+        bullets: []
+    };
+
+    let score = 0;
+    let enemies = [];
+    let keys = { up: false, down: false, left: false, right: false, space: false };
+
+    // Enemy object
+    function Enemy(x, y) {
+        this.x = x;
+        this.y = y;
+        this.width = 50;
+        this.height = 50;
+        this.speed = 2;
+    }
+
+    // Bullet object
+    function Bullet(x, y, direction) {
+        this.x = x;
+        this.y = y;
+        this.width = 10;
+        this.height = 5;
+        this.speed = 8;
+        this.direction = direction; // 1 = up, -1 = down, 0 = left, 2 = right
+    }
+
+    Bullet.prototype.update = function () {
+        if (this.direction === 1) {
+            this.y -= this.speed;
+        } else if (this.direction === -1) {
+            this.y += this.speed;
+        } else if (this.direction === 0) {
+            this.x -= this.speed;
+        } else if (this.direction === 2) {
+            this.x += this.speed;
+        }
+    };
+
+    Bullet.prototype.draw = function () {
+        ctx.fillStyle = 'red';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    };
+
+    // Move player
+    function movePlayer() {
+        player.x += player.dx;
+        player.y += player.dy;
+
+        // Prevent the player from going off screen
+        if (player.x < 0) player.x = 0;
+        if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+        if (player.y < 0) player.y = 0;
+        if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
+    }
+
+    // Shoot bullet
+    function shootBullet() {
+        if (keys.space) {
+            let direction = 1; // Default direction is up
+            if (keys.up) direction = 1;
+            else if (keys.down) direction = -1;
+            else if (keys.left) direction = 0;
+            else if (keys.right) direction = 2;
+            player.bullets.push(new Bullet(player.x + player.width / 2 - 5, player.y, direction));
+            keys.space = false; // Reset space key so it doesn't shoot continuously
+        }
+    }
+
+    // Draw player
+    function drawPlayer() {
+        ctx.fillStyle = "blue";
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+
+    // Create random enemies
+    function createEnemies() {
+        if (Math.random() < 0.01) {
+            let x = Math.random() * canvas.width;
+            let y = Math.random() * canvas.height;
+            enemies.push(new Enemy(x, y));
+        }
+    }
+
+    // Update and draw enemies
+    function updateEnemies() {
+        ctx.fillStyle = "green";
+        enemies.forEach((enemy, index) => {
+            ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+            if (enemy.y > canvas.height) {
+                enemies.splice(index, 1); // Remove enemy if it goes out of bounds
+            }
+        });
+    }
+
+    // Check for bullet collisions
+    function checkCollisions() {
+        for (let i = 0; i < player.bullets.length; i++) {
+            let bullet = player.bullets[i];
+            for (let j = 0; j < enemies.length; j++) {
+                let enemy = enemies[j];
+                if (
+                    bullet.x < enemy.x + enemy.width &&
+                    bullet.x + bullet.width > enemy.x &&
+                    bullet.y < enemy.y + enemy.height &&
+                    bullet.y + bullet.height > enemy.y
+                ) {
+                    // Collision detected
+                    enemies.splice(j, 1); // Remove the enemy
+                    player.bullets.splice(i, 1); // Remove the bullet
+                    score += 10; // Increase score
+                    document.getElementById("scoreboard").innerText = "Score: " + score;
+                    return;
+                }
+            }
+        }
+    }
+
+    // Handle key inputs
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowUp") keys.up = true;
+        if (event.key === "ArrowDown") keys.down = true;
+        if (event.key === "ArrowLeft") keys.left = true;
+        if (event.key === "ArrowRight") keys.right = true;
+        if (event.key === " ") keys.space = true; // Spacebar pressed
+    });
+
+    document.addEventListener("keyup", (event) => {
+        if (event.key === "ArrowUp") keys.up = false;
+        if (event.key === "ArrowDown") keys.down = false;
+        if (event.key === "ArrowLeft") keys.left = false;
+        if (event.key === "ArrowRight") keys.right = false;
+    });
+
+    // Update player movement based on key states
+    function updateMovement() {
+        if (keys.up) player.dy = -player.speed;
+        else if (keys.down) player.dy = player.speed;
+        else player.dy = 0;
+
+        if (keys.left) player.dx = -player.speed;
+        else if (keys.right) player.dx = player.speed;
+        else player.dx = 0;
+    }
+
+    // Draw bullets and update them
+    function drawBullets() {
+        player.bullets.forEach((bullet, index) => {
+            bullet.update();
+            bullet.draw();
+            if (bullet.y < 0 || bullet.y > canvas.height || bullet.x < 0 || bullet.x > canvas.width) {
+                player.bullets.splice(index, 1); // Remove bullet if it's off screen
+            }
+        });
+    }
+
+    // Main game loop
+    function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        updateMovement();
+        movePlayer();
+        shootBullet();
+        createEnemies();
+        updateEnemies();
+        checkCollisions();
+        drawPlayer();
+        drawBullets();
+        requestAnimationFrame(gameLoop);
+    }
+
+    // Start the game loop
+    gameLoop();
+
+</script>
+
+</body>
+</html>
