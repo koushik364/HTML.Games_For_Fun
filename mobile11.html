@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Shooting Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background: black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const player = {
+            x: canvas.width / 2 - 25,
+            y: canvas.height - 80,
+            width: 50,
+            height: 50,
+            color: "cyan",
+            speed: 7,
+            bullets: []
+        };
+
+        const asteroids = [];
+        let score = 0;
+        let gameOver = false;
+
+        function createAsteroid() {
+            const size = Math.random() * 40 + 20; // Random size between 20 and 60
+            const x = Math.random() * (canvas.width - size); // Random position within canvas width
+            asteroids.push({ x, y: -size, size, speed: Math.random() * 3 + 2 }); // Random speed between 2 and 5
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function drawBullets() {
+            player.bullets.forEach(bullet => {
+                ctx.fillStyle = "lime";
+                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            });
+        }
+
+        function drawAsteroids() {
+            asteroids.forEach(asteroid => {
+                ctx.fillStyle = "red";
+                ctx.beginPath();
+                ctx.arc(asteroid.x + asteroid.size / 2, asteroid.y + asteroid.size / 2, asteroid.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function movePlayer(touchX) {
+            const targetX = touchX - player.width / 2;
+            player.x += (targetX - player.x) * 0.1; // Smooth movement
+        }
+
+        function shootBullet() {
+            player.bullets.push({ x: player.x + player.width / 2 - 5, y: player.y, width: 10, height: 20 });
+        }
+
+        function updateBullets() {
+            player.bullets = player.bullets.filter(bullet => {
+                bullet.y -= 10; // Move bullets upward
+                return bullet.y + bullet.height > 0; // Remove bullets that leave the screen
+            });
+        }
+
+        function updateAsteroids() {
+            asteroids.forEach((asteroid, index) => {
+                asteroid.y += asteroid.speed;
+
+                // Check collision with player
+                if (
+                    asteroid.x < player.x + player.width &&
+                    asteroid.x + asteroid.size > player.x &&
+                    asteroid.y < player.y + player.height &&
+                    asteroid.y + asteroid.size > player.y
+                ) {
+                    gameOver = true;
+                    alert(`Game Over! Your score: ${score}`);
+                    document.location.reload();
+                }
+
+                // Remove asteroids that leave the screen
+                if (asteroid.y > canvas.height) {
+                    asteroids.splice(index, 1);
+                }
+            });
+        }
+
+        function checkBulletAsteroidCollision() {
+            player.bullets.forEach((bullet, bulletIndex) => {
+                asteroids.forEach((asteroid, asteroidIndex) => {
+                    if (
+                        bullet.x < asteroid.x + asteroid.size &&
+                        bullet.x + bullet.width > asteroid.x &&
+                        bullet.y < asteroid.y + asteroid.size &&
+                        bullet.y + bullet.height > asteroid.y
+                    ) {
+                        // Remove the asteroid and the bullet on collision
+                        player.bullets.splice(bulletIndex, 1);
+                        asteroids.splice(asteroidIndex, 1);
+                        score++;
+                    }
+                });
+            });
+        }
+
+        function drawScore() {
+            ctx.fillStyle = "white";
+            ctx.font = "20px Arial";
+            ctx.fillText(`Score: ${score}`, 10, 30);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawBullets();
+            drawAsteroids();
+            drawScore();
+        }
+
+        function update() {
+            if (gameOver) return;
+
+            updateBullets();
+            updateAsteroids();
+            checkBulletAsteroidCollision();
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            if (!gameOver) requestAnimationFrame(gameLoop);
+        }
+
+        // Touch controls
+        canvas.addEventListener("touchstart", (event) => {
+            movePlayer(event.touches[0].clientX);
+            shootBullet();
+        });
+
+        canvas.addEventListener("touchmove", (event) => {
+            movePlayer(event.touches[0].clientX);
+        });
+
+        // Create asteroids periodically
+        setInterval(createAsteroid, 1000); // Add a new asteroid every second
+
+        // Start the game
+        gameLoop();
+    </script>
+</body>
+</html>
